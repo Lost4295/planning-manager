@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{%  block title %}Accueil{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue sur Mon Calendrier</h1>
+    <p>Gérez vos événements facilement et efficacement.</p>
+    <a href="{{ path('app_date_index') }}">Voir les événements</a>
+    <a href="{{ path('calendar') }}">Voir le calendrier</a>
+    <br>
+    <a href="{{ path('app_date_new') }}">Créer un nouvel événement</a>
+{% endblock %}
