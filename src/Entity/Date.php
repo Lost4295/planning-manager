@@ -38,6 +38,8 @@ class Date
 
 
 
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -124,4 +126,22 @@ class Date
     {
         $this->repeat_every = $repeat_every;
         return $this;
-    }}
+    }
+
+    #[ORM\Column]
+    private bool $isFromMe = false;
+
+    public function isFromMe(): bool
+    {
+        return $this->isFromMe;
+    }
+
+    public function setIsFromMe(bool $isFromMe): Date
+    {
+        $this->isFromMe = $isFromMe;
+        return $this;
+    }
+
+
+
+}

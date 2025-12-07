@@ -11,9 +11,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\Column(length: 32)]
+    private ?string $id = null;
 
     #[ORM\Column(length: 180)]
     private ?string $email = null;
@@ -23,6 +23,53 @@ class User implements UserInterface
      */
     #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private ?string $pseudo;
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): User
+    {
+        $this->pseudo = $pseudo;
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return "https://cdn.discordapp.com/avatars/{$this->id}/{$this->avatar}.webp";
+    }
+    public function setAvatar(?string $avatar): User
+    {
+        $this->avatar = $avatar;
+        return $this;
+    }
+
+    public function getAccessToken(): ?string
+    {
+        return $this->accessToken;
+    }
+
+    public function setAccessToken(?string $accessToken): User
+    {
+        $this->accessToken = $accessToken;
+        return $this;
+    }
+
+    #[ORM\Column(type: 'string', length: 32, nullable: true)]
+    private ?string $avatar;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $accessToken = null;
+
+    public function setId(string $id): static
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     public function getId(): ?int
     {

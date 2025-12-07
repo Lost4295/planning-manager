@@ -18,3 +18,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Service\DiscordApiService:
+        arguments:
+            $clientId: '%env(CLIENT_ID)%'
+            $redirectUri: '%env(REDIRECT_URI)%'
+
+    App\Controller\DiscordController:
+        arguments:
+            $myDiscordClientId: '%env(ME_D_ID)%'
+            $herDiscordClientId: '%env(HER_D_ID)%'

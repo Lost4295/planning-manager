@@ -20,12 +20,15 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: {{ events|raw }},
                 headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    center: 'prev,next today',
+                    left: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay list'
                 },
+                weekNumberCalculation:"ISO",
+                navLinks:true,
+                events: '{{ path("get_dates") }}',
+                locale: 'fr',
                 editable: true,
                 selectable: true,
                 selectHelper: true

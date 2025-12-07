@@ -40,4 +40,14 @@ class DateRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findDateBetween($start, $end): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.start_date BETWEEN :start AND :end or d.end_date BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+    }
 }

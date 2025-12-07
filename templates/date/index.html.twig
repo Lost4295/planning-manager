@@ -3,41 +3,35 @@
 {% block title %}Date index{% endblock %}
 
 {% block body %}
-    <h1>Date index</h1>
+    <div class="container-fluid">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Start_date</th>
-                <th>End_date</th>
-                <th>Color</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for date in dates %}
-            <tr>
-                <td>{{ date.id }}</td>
-                <td>{{ date.title }}</td>
-                <td>{{ date.startDate ? date.startDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ date.endDate ? date.endDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ date.color }}</td>
-                <td>{{ date.description }}</td>
-                <td>
-                    <a href="{{ path('app_date_show', {'id': date.id}) }}">show</a>
-                    <a href="{{ path('app_date_edit', {'id': date.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <h1>Date index</h1>
 
-    <a href="{{ path('app_date_new') }}">Create new</a>
+        <div class=" row row-cols-3 text-center g-3">
+            {% for date in dates %}
+                <div class="col">
+
+                    <div class="card">
+                        <p>{{ date.title }}</p>
+                        <p>{{ date.startDate ? date.startDate|date('Y-m-d H:i:s') : '' }}</p>
+                        <p>{{ date.endDate ? date.endDate|date('Y-m-d H:i:s') : '' }}</p>
+                        <p>{{ date.color }}</p>
+                        <p>{{ date.description }}</p>
+                        <p>
+                            <a href="{{ path('app_date_show', {'id': date.id}) }}">show</a>
+                            <a href="{{ path('app_date_edit', {'id': date.id}) }}">edit</a>
+                        </p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col">
+                    <div class="card">
+                        <p>no records found</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="{{ path('app_date_new') }}">Create new</a>
+    </div>
 {% endblock %}
