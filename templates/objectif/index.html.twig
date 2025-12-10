@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Objectifs{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+
+        <h1>Objectifs de l'année</h1>
+
+        <div class="row">
+            <div class="col">
+                <ul class="list-group list-group-flush">
+                    {% for objectif in objectifs %}
+                        <li class="list-group-item {% if app.user == objectif.creator %}list-group-item-primary {% else %} list-group-item-secondary{% endif %}">
+                            <p>{{ objectif.objectif }}</p>
+                            <p>{{ objectif.completionDate ? "Complété le : " ~ objectif.completionDate|date('Y-m-d H:i:s') : '' }}</p>
+                            {% if app.user %}
+                                {% if not objectif.completed %}
+                                    <a href="{{ path('objectif_complete', {'id': objectif.id}) }}"
+                                       class="btn m-2 btn-info"> Marquer comme complété</a>
+                                {% endif %}
+                                <a href="{{ path('app_objectif_edit', {'id': objectif.id}) }}"
+                                   class="btn m-2 btn-warning"> Modifier</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if app.user %}
+                <a href="{{ path('app_objectif_new') }}" class="btn btn-success my-3">Create new</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

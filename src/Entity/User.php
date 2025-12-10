@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -65,6 +67,17 @@ class User implements UserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $accessToken = null;
 
+    /**
+     * @var Collection<int, Objectif>
+     */
+    #[ORM\OneToMany(targetEntity: Objectif::class, mappedBy: 'creator')]
+    private Collection $objectifs;
+
+    public function __construct()
+    {
+        $this->objectifs = new ArrayCollection();
+    }
+
     public function setId(string $id): static
     {
         $this->id = $id;
@@ -124,5 +137,35 @@ class User implements UserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    /**
+     * @return Collection<int, Objectif>
+     */
+    public function getObjectifs(): Collection
+    {
+        return $this->objectifs;
+    }
+
+    public function addObjectif(Objectif $objectif): static
+    {
+        if (!$this->objectifs->contains($objectif)) {
+            $this->objectifs->add($objectif);
+            $objectif->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeObjectif(Objectif $objectif): static
+    {
+        if ($this->objectifs->removeElement($objectif)) {
+            // set the owning side to null (unless already changed)
+            if ($objectif->getCreator() === $this) {
+                $objectif->setCreator(null);
+            }
+        }
+
+        return $this;
     }
 }
