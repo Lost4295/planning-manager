@@ -30,15 +30,12 @@ class Date
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+
     #[ORM\Column]
-    private ?bool $repeatable = null;
+    private bool $isFromMe = false;
 
-    #[ORM\Column(type:'integer', enumType: RepeatableEnum::class)]
-    private ?RepeatableEnum $repeat_every = null;
-
-
-
-
+    #[ORM\ManyToOne(inversedBy: 'dateSelected')]
+    private ?DateScheduler $dateScheduler = null;
 
     public function getId(): ?int
     {
@@ -105,31 +102,6 @@ class Date
         return $this;
     }
 
-    public function isRepeatable(): ?bool
-    {
-        return $this->repeatable;
-    }
-
-    public function setRepeatable(bool $repeatable): static
-    {
-        $this->repeatable = $repeatable;
-
-        return $this;
-    }
-
-    public function getRepeatEvery(): ?RepeatableEnum
-    {
-        return $this->repeat_every;
-    }
-
-    public function setRepeatEvery(?RepeatableEnum $repeat_every): static
-    {
-        $this->repeat_every = $repeat_every;
-        return $this;
-    }
-
-    #[ORM\Column]
-    private bool $isFromMe = false;
 
     public function isFromMe(): bool
     {
@@ -139,6 +111,18 @@ class Date
     public function setIsFromMe(bool $isFromMe): Date
     {
         $this->isFromMe = $isFromMe;
+        return $this;
+    }
+
+    public function getDateScheduler(): ?DateScheduler
+    {
+        return $this->dateScheduler;
+    }
+
+    public function setDateScheduler(?DateScheduler $dateScheduler): static
+    {
+        $this->dateScheduler = $dateScheduler;
+
         return $this;
     }
 

@@ -27,3 +27,6 @@ services:
         arguments:
             $myDiscordClientId: '%env(ME_D_ID)%'
             $herDiscordClientId: '%env(HER_D_ID)%'
+    App\Controller\DateController:
+        arguments:
+            $myDiscordClientId: '%env(ME_D_ID)%'

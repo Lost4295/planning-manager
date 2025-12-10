@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Date;
-use App\Form\DateType;
+use App\Entity\User;
+use App\Form\CreateDateType;
+use App\Form\UpdateDateType;
 use App\Repository\DateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +18,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/date')]
 final class DateController extends AbstractController
 {
+    public function __construct(
+        private readonly string $myDiscordClientId
+    )
+    {
+    }
+
     #[Route(name: 'app_date_index', methods: ['GET'])]
     public function index(DateRepository $dateRepository): Response
     {
@@ -37,7 +45,7 @@ final class DateController extends AbstractController
         $array = [];
         /** @var Date $date */
         foreach ($dates as $date) {
-            $color = "#". ($date->isFromMe()?'bada55':'c0ffee');
+            $color = "#". $date->getColor();
             $array[] = [
                 "id"=> $date->getId(),
                 "title"=> $date->getTitle(),
@@ -56,10 +64,19 @@ final class DateController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $date = new Date();
-        $form = $this->createForm(DateType::class, $date);
+        $form = $this->createForm(CreateDateType::class, $date);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $dbUser = $entityManager->getRepository(User::class)->findOneBy(['email'=>$user->getUserIdentifier()]);
+            if ($dbUser && $dbUser->getId() == $this->myDiscordClientId) {
+                $date->setIsFromMe(true);
+                $date->setColor("4c9294");
+            } else {
+                $date->setIsFromMe(false);
+                $date->setColor("F0A8C6");
+            }
             $entityManager->persist($date);
             $entityManager->flush();
 
@@ -84,7 +101,7 @@ final class DateController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function edit(Request $request, Date $date, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(DateType::class, $date);
+        $form = $this->createForm(UpdateDateType::class, $date);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

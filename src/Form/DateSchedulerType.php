@@ -2,28 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\Date;
+use App\Entity\DateScheduler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DateType extends AbstractType
+class DateSchedulerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('start_date')
-            ->add('end_date')
-            ->add('color')
-            ->add('description')
+            ->add('repeatable')
+            ->add('repeat_every')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Date::class,
+            'data_class' => DateScheduler::class,
         ]);
     }
 }

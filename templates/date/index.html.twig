@@ -5,21 +5,23 @@
 {% block body %}
     <div class="container-fluid">
 
-        <h1>Date index</h1>
+        <h1>Dates enregistrées</h1>
 
-        <div class=" row row-cols-3 text-center g-3">
+        <div class="row row-cols-sm-1 row-cols-md-3 text-center g-3">
             {% for date in dates %}
                 <div class="col">
 
-                    <div class="card">
+                    <div class="card p-2">
                         <p>{{ date.title }}</p>
-                        <p>{{ date.startDate ? date.startDate|date('Y-m-d H:i:s') : '' }}</p>
-                        <p>{{ date.endDate ? date.endDate|date('Y-m-d H:i:s') : '' }}</p>
-                        <p>{{ date.color }}</p>
-                        <p>{{ date.description }}</p>
+                        <p>Date de début : {{ date.startDate ? date.startDate|date('Y-m-d H:i:s') : '' }}</p>
+                        <p>Date de fin : {{ date.endDate ? date.endDate|date('Y-m-d H:i:s') : '' }}</p>
+                        <p>Couleur choisie : <span class="badge" data-color="#{{ date.color }}">{{ date.color }} </span> </p>
+                        <p>{{ date.description| length >50 ? date.description|split(0,50) ~ "..." : date.description  }}</p>
                         <p>
-                            <a href="{{ path('app_date_show', {'id': date.id}) }}">show</a>
-                            <a href="{{ path('app_date_edit', {'id': date.id}) }}">edit</a>
+                            <a href="{{ path('app_date_show', {'id': date.id}) }}" class="btn m-2 btn-primary">Montrer</a>
+                        {%  if app.user %}
+                            <a href="{{ path('app_date_edit', {'id': date.id}) }}" class="btn m-2 btn-warning"> Modifier</a>
+                        {% endif %}
                         </p>
                     </div>
                 </div>
@@ -31,7 +33,22 @@
                 </div>
             {% endfor %}
         </div>
-
-        <a href="{{ path('app_date_new') }}">Create new</a>
+        {% if app.user %}
+        <a href="{{ path('app_date_new') }}" class="btn btn-success my-3">Create new</a>
+        {% endif %}
     </div>
+    <script>
+        const toRGB = (color) => {
+            const { style } = new Option();
+            style.backgroundColor = color;
+            return style.backgroundColor; // retourner la valeur résolue
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.badge').forEach(badge => {
+                badge.style.backgroundColor = toRGB(badge.dataset.color);
+                console.log(badge);
+            });
+        });
+    </script>
 {% endblock %}
