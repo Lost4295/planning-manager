@@ -1,14 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Date{% endblock %}
+{% block title %}Nouvel Événement{% endblock %}
 
 {% block body %}
-    <h1>Créer une date</h1>
+    <div class="form-container">
+        <a href="{{ path('app_date_index') }}" class="back-link">
+            <i class="bi bi-arrow-left"></i> Retour aux événements
+        </a>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary">Créer</button>
-    {{ form_end(form) }}
+        <div class="form-card">
+            <h1>✨ Créer un événement</h1>
 
+            {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_label(form.title, '📌 Titre de l\'événement') }}
+                {{ form_widget(form.title, {
+                    'attr': {
+                        'placeholder': 'Ex: Réunion d\'équipe, Anniversaire...'
+                    }
+                }) }}
+                {{ form_errors(form.title) }}
+            </div>
 
+            <div class="form-group">
+                {{ form_label(form.description, '📝 Description') }}
+                {{ form_widget(form.description, {
+                    'attr': {
+                        'placeholder': 'Décrivez votre événement...',
+                        'rows': 5
+                    }
+                }) }}
+                {{ form_errors(form.description) }}
+                <small class="form-text">Ajoutez tous les détails importants sur cet événement</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.start_date, '📅 Date de début') }}
+                    {{ form_widget(form.start_date) }}
+                    {{ form_errors(form.start_date) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.end_date, '🏁 Date de fin') }}
+                    {{ form_widget(form.end_date) }}
+                    {{ form_errors(form.end_date) }}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('app_date_index') }}"
+                   class="btn btn-warning d-flex justify-content-center align-items-center">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Créer l'événement
+                </button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <style>
+        /* Animation pour le formulaire */
+        .form-card {
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Effet focus sur les inputs */
+        .form-group {
+            position: relative;
+        }
+
+        .form-control:focus + .form-label::after {
+            content: '✓';
+            position: absolute;
+            right: 10px;
+            color: #38ef7d;
+            font-weight: bold;
+        }
+    </style>
 {% endblock %}

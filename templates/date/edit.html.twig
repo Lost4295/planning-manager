@@ -1,13 +1,74 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Date{% endblock %}
+{% block title %}Modifier l'événement{% endblock %}
 
 {% block body %}
-    <h1>Edit Date</h1>
+    <div class="form-container">
+        <a href="{{ path('app_date_show', {'id': date.id}) }}" class="back-link">
+            <i class="bi bi-arrow-left"></i> Retour à l'événement
+        </a>
 
-    {{ include('date/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="form-card">
+            <h1>✏️ Modifier l'événement</h1>
 
-    <a href="{{ path('app_date_index') }}">back to list</a>
+            {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_label(form.title, '📌 Titre de l\'événement') }}
+                {{ form_widget(form.title, {
+                    'attr': {
+                        'placeholder': 'Ex: Réunion d\'équipe, Anniversaire...'
+                    }
+                }) }}
+                {{ form_errors(form.title) }}
+            </div>
 
-    {{ include('date/_delete_form.html.twig') }}
+            <div class="form-group">
+                {{ form_label(form.description, '📝 Description') }}
+                {{ form_widget(form.description, {
+                    'attr': {
+                        'placeholder': 'Décrivez votre événement...',
+                        'rows': 5
+                    }
+                }) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.start_date, '📅 Date de début') }}
+                    {{ form_widget(form.start_date) }}
+                    {{ form_errors(form.start_date) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.end_date, '🏁 Date de fin') }}
+                    {{ form_widget(form.end_date) }}
+                    {{ form_errors(form.end_date) }}
+                </div>
+            </div>
+            {{ form_rest(form) }}
+            <div class="form-actions">
+                <a href="{{ path('app_date_show', {'id': date.id}) }}"
+                   class="btn btn-warning d-flex justify-content-center align-items-center">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Enregistrer les modifications
+                </button>
+            </div>
+            {{ form_end(form) }}
+
+            <!-- Bouton de suppression séparé -->
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--card-border);">
+                <button type="submit" class="btn btn-danger w-100"
+                        onclick="()=> {
+                            let test = confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')
+                            if (test){
+                            window.location.href='{{ path('app_date_delete', {'id': date.id}) }}'; }
+                            }">
+                    <i class="bi bi-trash"></i> Supprimer cet événement
+                </button>
+            </div>
+        </div>
+    </div>
 {% endblock %}

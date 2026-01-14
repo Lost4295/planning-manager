@@ -3,21 +3,77 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <h1>Bienvenue sur Mon Calendrier</h1>
-    <p>Gérez vos événements facilement et efficacement.</p>
-    <a href="{{ path('app_date_index') }}">Voir les événements</a>
-    <a href="{{ path('calendar') }}">Voir le calendrier</a>
-    {% if app.user %}
-    <br>
-    <a href="{{ path('app_date_new') }}">Créer un nouvel événement</a>
+    <div class="hero-container">
+        <h1>📅 Bienvenue sur Calendar Manager</h1>
+        <p>Organisez votre vie, un événement à la fois</p>
 
-        <div class="card">
-            <div id='card-header'>
-                <h3> Hello {{ app.user.pseudo }} !</h3>
+        <div class="action-buttons">
+            <a href="{{ path('app_date_index') }}" class="btn-action btn-primary-gradient">
+                <i class="bi bi-calendar-event"></i> Mes Événements
+            </a>
+            <a href="{{ path('calendar') }}" class="btn-action btn-secondary-gradient">
+                <i class="bi bi-calendar3"></i> Calendrier
+            </a>
+            {% if app.user %}
+                <a href="{{ path('app_date_new') }}" class="btn-action btn-accent-gradient">
+                    <i class="bi bi-plus-circle"></i> Nouvel Événement
+                </a>
+            {% endif %}
+        </div>
+
+        {% if app.user %}
+            <div class="user-card">
+                <div class="user-card-header">
+                    <h3>👋 Hello {{ app.user.pseudo }} !</h3>
+                </div>
+                <div class="user-avatar-container">
+                    <img src="{{ app.user.avatar }}" class="user-avatar" alt="Avatar de {{ app.user.pseudo }}"/>
+                </div>
+                <p style="color: var(--muted-text); margin-top: 1rem;">
+                    Prêt à organiser votre journée ?
+                </p>
             </div>
-            <div class="card-body">
-                <img src="{{ app.user.avatar }}" width="150" alt="Avatar de {{ app.user.pseudo }}"/>
+        {% else %}
+            <div class="user-card">
+                <div class="user-card-header">
+                    <h3>🚀 Commencez maintenant</h3>
+                </div>
+                <p style="color: var(--muted-text); margin: 1.5rem 0;">
+                    Connectez-vous avec Discord pour accéder à toutes les fonctionnalités et synchroniser vos événements
+                </p>
+                <form action="{{ path('oauth_discord') }}" method="post" style="margin-top: 1.5rem;">
+                    <input type="hidden" name="token" value="{{ csrf_token('discord-auth') }}"/>
+                    <button class="btn-action btn-primary-gradient" type="submit" style="width: 100%;">
+                        <i class="bi bi-discord"></i> Connexion Discord
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <h3>Planning simplifié</h3>
+                <p>Visualisez tous vos événements d'un coup d'œil</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-alarm"></i>
+                </div>
+                <h3>Rappels intelligents</h3>
+                <p>Ne manquez plus jamais un événement important</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+                <h3>Objectifs trackés</h3>
+                <p>Suivez vos progrès et atteignez vos buts</p>
             </div>
         </div>
-    {% endif %}
+    </div>
 {% endblock %}

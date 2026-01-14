@@ -1,43 +1,157 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Date{% endblock %}
+{% block title %}{{ date.title }}{% endblock %}
 
 {% block body %}
-    <h1>Date</h1>
+    <div class="form-container">
+        <a href="{{ path('app_date_index') }}" class="back-link">
+            <i class="bi bi-arrow-left"></i> Retour aux événements
+        </a>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ date.id }}</td>
-        </tr>
-        <tr>
-            <th>Title</th>
-            <td>{{ date.title }}</td>
-        </tr>
-        <tr>
-            <th>Start_date</th>
-            <td>{{ date.startDate ? date.startDate|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>End_date</th>
-            <td>{{ date.endDate ? date.endDate|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Color</th>
-            <td>{{ date.color }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ date.description }}</td>
-        </tr>
-        </tbody>
-    </table>
+        <div class="form-card">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="margin-bottom: 1rem;">{{ date.title }}</h1>
+                <span class="badge" data-color="#{{ date.color }}" style="font-size: 1rem; padding: 0.5rem 1.5rem;">
+                    Couleur: #{{ date.color }}
+                </span>
+            </div>
 
-    <a href="{{ path('app_date_index') }}">back to list</a>
+            <div style="display: grid; gap: 2rem; margin: 2rem 0;">
+                <!-- Dates -->
+                <div class="detail-card">
+                    <div class="detail-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div>
+                        <h3>📅 Date de début</h3>
+                        <p style="font-size: 1.2rem; margin: 0;">
+                            {{ date.startDate ? date.startDate|date('d/m/Y à H:i') : 'Non définie' }}
+                        </p>
+                    </div>
+                </div>
 
-    {% if app.user %}
-        <a href="{{ path('app_date_edit', {'id': date.id}) }}">edit</a>
-        {{ include('date/_delete_form.html.twig') }}
-    {% endif %}
+                <div class="detail-card">
+                    <div class="detail-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div>
+                        <h3>🏁 Date de fin</h3>
+                        <p style="font-size: 1.2rem; margin: 0;">
+                            {{ date.endDate ? date.endDate|date('d/m/Y à H:i') : 'Non définie' }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Durée calculée -->
+                {% if date.startDate and date.endDate %}
+                    <div class="detail-card">
+                        <div class="detail-icon">
+                            <i class="bi bi-clock"></i>
+                        </div>
+                        <div>
+                            <h3>⏱️ Durée</h3>
+                            <p style="font-size: 1.2rem; margin: 0;">
+                                {% set duration = date.endDate.diff(date.startDate) %}
+                                {% if duration.days > 0 %}
+                                    {{ duration.days }} jour{{ duration.days > 1 ? 's' : '' }}
+                                {% endif %}
+                                {% if duration.h > 0 %}
+                                    {{ duration.h }} heure{{ duration.h > 1 ? 's' : '' }}
+                                {% endif %}
+                                {% if duration.i > 0 %}
+                                    {{ duration.i }} minute{{ duration.i > 1 ? 's' : '' }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Description -->
+                {% if date.description %}
+                    <div class="detail-card" style="grid-column: 1 / -1;">
+                        <div class="detail-icon">
+                            <i class="bi bi-text-left"></i>
+                        </div>
+                        <div>
+                            <h3>📝 Description</h3>
+                            <p style="color: var(--light-text); line-height: 1.6; margin: 0.5rem 0 0 0; white-space: pre-wrap;">{{ date.description }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions" style="margin-top: 2rem;">
+                {% if app.user %}
+                    <a href="{{ path('app_date_edit', {'id': date.id}) }}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                {% endif %}
+                <a href="{{ path('calendar') }}" class="btn btn-primary">
+                    <i class="bi bi-calendar3"></i> Voir dans le calendrier
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .detail-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(102, 126, 234, 0.3);
+            transform: translateX(5px);
+        }
+
+        .detail-icon {
+            font-size: 2rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            min-width: 40px;
+        }
+
+        .detail-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--muted-text);
+            font-weight: 600;
+        }
+
+        .detail-card p {
+            color: var(--light-text);
+        }
+    </style>
+
+    <script>
+        const toRGB = (color) => {
+            const { style } = new Option();
+            style.backgroundColor = color;
+            return style.backgroundColor;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.badge').forEach(badge => {
+                const color = badge.dataset.color;
+                badge.style.backgroundColor = toRGB(color);
+
+                // Ajuster la couleur du texte selon la luminosité du fond
+                const rgb = toRGB(color).match(/\d+/g);
+                if (rgb) {
+                    const brightness = (parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000;
+                    badge.style.color = brightness > 128 ? '#1a1a2e' : '#ffffff';
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -116,7 +116,7 @@ final class DateController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_date_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_date_delete', methods: ['DELETE'])]
     #[IsGranted("ROLE_USER")]
     public function delete(Request $request, Date $date, EntityManagerInterface $entityManager): Response
     {

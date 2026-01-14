@@ -1,53 +1,114 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Date index{% endblock %}
+{% block title %}Mes Événements{% endblock %}
 
 {% block body %}
     <div class="container-fluid">
+        <h1>📅 Mes Événements</h1>
 
-        <h1>Dates enregistrées</h1>
-
-        <div class="row row-cols-sm-1 row-cols-md-3 text-center g-3">
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for date in dates %}
                 <div class="col">
+                    <div class="card p-3 h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-dark mb-3" style="font-weight: 700; font-size: 1.3rem;">
+                                {{ date.title }}
+                            </h5>
 
-                    <div class="card p-2">
-                        <p>{{ date.title }}</p>
-                        <p>Date de début : {{ date.startDate ? date.startDate|date('Y-m-d H:i:s') : '' }}</p>
-                        <p>Date de fin : {{ date.endDate ? date.endDate|date('Y-m-d H:i:s') : '' }}</p>
-                        <p>Couleur choisie : <span class="badge" data-color="#{{ date.color }}">{{ date.color }} </span> </p>
-                        <p>{{ date.description| length >50 ? date.description|split(0,50) ~ "..." : date.description  }}</p>
-                        <p>
-                            <a href="{{ path('app_date_show', {'id': date.id}) }}" class="btn m-2 btn-primary">Montrer</a>
-                        {%  if app.user %}
-                            <a href="{{ path('app_date_edit', {'id': date.id}) }}" class="btn m-2 btn-warning"> Modifier</a>
-                        {% endif %}
-                        </p>
+                            <div class="mb-2">
+                                <i class="bi bi-calendar-event" style="color: #667eea;"></i>
+                                <strong class="text-dark">Début :</strong>
+                                <span style="color: var(--muted-text);">
+                                    {{ date.startDate ? date.startDate|date('d/m/Y à H:i') : 'Non défini' }}
+                                </span>
+                            </div>
+
+                            <div class="mb-3">
+                                <i class="bi bi-calendar-check" style="color: #f5576c;"></i>
+                                <strong class="text-dark">Fin :</strong>
+                                <span style="color: var(--muted-text);">
+                                    {{ date.endDate ? date.endDate|date('d/m/Y à H:i') : 'Non défini' }}
+                                </span>
+                            </div>
+
+                            <div class="mb-3">
+                                <i class="bi bi-palette" style="color: #4facfe;"></i>
+                                <strong class="text-dark">Couleur :</strong>
+                                <span class="badge ms-2" data-color="#{{ date.color }}">
+                                    #{{ date.color }}
+                                </span>
+                            </div>
+
+                            {% if date.description %}
+                                <div class="mb-3 flex-grow-1">
+                                    <i class="bi bi-text-left" style="color: #38ef7d;"></i>
+                                    <strong class="text-dark">Description :</strong>
+                                    <p style="color: var(--muted-text); margin-top: 0.5rem; font-size: 0.95rem;">
+                                        {{ date.description|length > 100 ? date.description|slice(0, 100) ~ "..." : date.description }}
+                                    </p>
+                                </div>
+                            {% endif %}
+
+                            <div class="mt-auto d-flex gap-2 flex-wrap justify-content-center">
+                                <a href="{{ path('app_date_show', {'id': date.id}) }}" class="btn btn-primary flex-grow-1">
+                                    <i class="bi bi-eye"></i> Détails
+                                </a>
+                                {% if app.user %}
+                                    <a href="{{ path('app_date_edit', {'id': date.id}) }}" class="btn btn-warning flex-grow-1">
+                                        <i class="bi bi-pencil"></i> Modifier
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% else %}
-                <div class="col">
-                    <div class="card">
-                        <p>no records found</p>
+                <div class="col-12">
+                    <div class="card p-5 text-center">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">📭</div>
+                        <h3 style="color: var(--muted-text);">Aucun événement enregistré</h3>
+                        <p style="color: var(--muted-text); margin-top: 1rem;">
+                            Commencez par créer votre premier événement !
+                        </p>
+                        {% if app.user %}
+                            <div class="mt-3">
+                                <a href="{{ path('app_date_new') }}" class="btn btn-success btn-lg">
+                                    <i class="bi bi-plus-circle"></i> Créer un événement
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
         </div>
-        {% if app.user %}
-        <a href="{{ path('app_date_new') }}" class="btn btn-success my-3">Create new</a>
+
+        {% if app.user and dates|length > 0 %}
+            <div class="text-center mt-4">
+                <a href="{{ path('app_date_new') }}" class="btn btn-success btn-lg">
+                    <i class="bi bi-plus-circle"></i> Créer un nouvel événement
+                </a>
+            </div>
         {% endif %}
     </div>
+
     <script>
         const toRGB = (color) => {
             const { style } = new Option();
             style.backgroundColor = color;
-            return style.backgroundColor; // retourner la valeur résolue
+            return style.backgroundColor;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.badge').forEach(badge => {
-                badge.style.backgroundColor = toRGB(badge.dataset.color);
-                console.log(badge);
+                const color = badge.dataset.color;
+                badge.style.backgroundColor = toRGB(color);
+
+                // Ajuster la couleur du texte selon la luminosité du fond
+                const rgb = toRGB(color).match(/\d+/g);
+                if (rgb) {
+                    const brightness = (parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000;
+                    badge.style.color = brightness > 128 ? '#1a1a2e' : '#ffffff';
+                }
             });
         });
     </script>
