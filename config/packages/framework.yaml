@@ -9,9 +9,9 @@ framework:
     #fragments: true
     trusted_hosts: [ '^127\.0\.0\.1$','^31\.39\.140\.16$', 'localhost' ]
     assets:
-        base_path: '/planning'
+        #base_path: '/planning'
     router:
-        default_uri: 'http://31.39.140.16/planning/'
+        #default_uri: 'http://31.39.140.16/planning/'
 when@test:
     framework:
         test: true
