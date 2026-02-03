@@ -13,6 +13,7 @@ framework:
         - x-forwarded-proto
         - x-forwarded-host
         - x-forwarded-port
+        - x-forwarded-prefix
     assets:
         base_path: '/planning'
     router:
