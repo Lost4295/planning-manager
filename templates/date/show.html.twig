@@ -86,6 +86,12 @@
                     <a href="{{ path('app_date_edit', {'id': date.id}) }}" class="btn btn-warning">
                         <i class="bi bi-pencil"></i> Modifier
                     </a>
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--card-border);">
+                        <a href="{{ path('app_date_delete', {'id': date.id}) }}" class="btn btn-danger w-100"
+                        >
+                            <i class="bi bi-trash"></i> Supprimer cet événement
+                        </a>
+                    </div>
                 {% endif %}
                 <a href="{{ path('calendar') }}" class="btn btn-primary">
                     <i class="bi bi-calendar3"></i> Voir dans le calendrier
@@ -135,7 +141,7 @@
 
     <script>
         const toRGB = (color) => {
-            const { style } = new Option();
+            const {style} = new Option();
             style.backgroundColor = color;
             return style.backgroundColor;
         }

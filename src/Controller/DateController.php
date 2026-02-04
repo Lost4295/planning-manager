@@ -28,45 +28,48 @@ final class DateController extends AbstractController
     public function index(DateRepository $dateRepository): Response
     {
         return $this->render('date/index.html.twig', [
-            'dates' => $dateRepository->findBy(["important"=>true]),
+            'dates' => $dateRepository->findBy(["important" => true]),
         ]);
     }
-    #[Route('/all',name: 'app_date_index_all', methods: ['GET'])]
+
+    #[Route('/all', name: 'app_date_index_all', methods: ['GET'])]
     public function index_everything(DateRepository $dateRepository): Response
     {
         return $this->render('date/index.html.twig', [
             'dates' => $dateRepository->findAll(),
         ]);
     }
+
     #[Route('/get_dates', name: 'get_dates')]
     public function getDates(Request $request, EntityManagerInterface $em): JsonResponse
     {
-        $start= $request->query->get('start');
-        $end= $request->query->get('end');
+        $start = $request->query->get('start');
+        $end = $request->query->get('end');
 
         if (!$start || !$end) {
-            return new JsonResponse([],400);
+            return new JsonResponse([], 400);
         }
         $dates = $em->getRepository(Date::class)->findDateBetween($start, $end);
 
         $array = [];
         /** @var Date $date */
         foreach ($dates as $date) {
-            $color = "#". $date->getColor();
+            $color = "#" . $date->getColor();
             $array[] = [
-                "id"=> $date->getId(),
-                "title"=> $date->getTitle(),
-                "start"=> $date->getStartDate()->format("Y-m-d H:i:s"),
-                "end"=> $date->getEndDate()->format("Y-m-d H:i:s"),
-                "rendering"=> 'background',
-                "color"=> $color,
-                "backgroundColor"=> $color,
-                "url"=> $this->generateUrl('app_date_show', ['id'=>$date->getId()]),
+                "id" => $date->getId(),
+                "title" => $date->getTitle(),
+                "start" => $date->getStartDate()->format("Y-m-d H:i:s"),
+                "end" => $date->getEndDate()->format("Y-m-d H:i:s"),
+                "rendering" => 'background',
+                "color" => $color,
+                "backgroundColor" => $color,
+                "url" => $this->generateUrl('app_date_show', ['id' => $date->getId()]),
             ];
         }
         return new JsonResponse($array);
 
     }
+
     #[Route('/new', name: 'app_date_new', methods: ['GET', 'POST'])]
     #[IsGranted("ROLE_USER")]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -88,7 +91,7 @@ final class DateController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_date_show', methods: ['GET'], requirements: ["id"=>"\d+"])]
+    #[Route('/{id}', name: 'app_date_show', methods: ['GET'], requirements: ["id" => "\d+"])]
     public function show(Date $date): Response
     {
         return $this->render('date/show.html.twig', [
@@ -119,10 +122,8 @@ final class DateController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function delete(Request $request, Date $date, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$date->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($date);
-            $entityManager->flush();
-        }
+        $entityManager->remove($date);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_date_index', [], Response::HTTP_SEE_OTHER);
     }

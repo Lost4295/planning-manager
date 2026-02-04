@@ -56,18 +56,15 @@
                     <i class="bi bi-check-circle"></i> Enregistrer les modifications
                 </button>
             </div>
+
             {{ form_end(form) }}
 
             <!-- Bouton de suppression séparé -->
             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--card-border);">
-                <button type="submit" class="btn btn-danger w-100"
-                        onclick="()=> {
-                            let test = confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')
-                            if (test){
-                            window.location.href='{{ path('app_date_delete', {'id': date.id}) }}'; }
-                            }">
+                <a href="{{ path('app_date_delete', {'id': date.id}) }}" class="btn btn-danger w-100"
+                        >
                     <i class="bi bi-trash"></i> Supprimer cet événement
-                </button>
+                </a>
             </div>
         </div>
     </div>
