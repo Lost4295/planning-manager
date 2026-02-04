@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes Événements{% endblock %}
+{% block title %}{% if app.current_route == 'app_date_index' %}Événements importants {%else  %} Tous les événements {% endif %}{% endblock %}
 
 {% block body %}
     <div class="container-fluid">
-        <h1>📅 Mes Événements</h1>
+        <h1>📅 {% if app.current_route == 'app_date_index' %}Événements importants {% else %} Tous les événements {% endif %}</h1>
 
         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for date in dates %}

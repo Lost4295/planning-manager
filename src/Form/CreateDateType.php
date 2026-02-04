@@ -19,19 +19,21 @@ class CreateDateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class,[
-                'attr'=>['class'=>'form-control']
+            ->add('title', TextType::class, [
+                'attr' => ['class' => 'form-control']
             ])
-            ->add('description', TextareaType::class,[
-                'attr'=>['class'=>'form-control']
+            ->add('description', TextareaType::class, [
+                'attr' => ['class' => 'form-control']
             ])
-            ->add('start_date', DateTimeType::class,[
-                'attr'=>['class'=>'form-control']
+            ->add('important', CheckboxType::class, [
+                'attr' => ['class' => 'form-control']
             ])
-            ->add('end_date', DateTimeType::class,[
-                'attr'=>['class'=>'form-control']
+            ->add('start_date', DateTimeType::class, [
+                'attr' => ['class' => 'form-control']
             ])
-        ;
+            ->add('end_date', DateTimeType::class, [
+                'attr' => ['class' => 'form-control']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

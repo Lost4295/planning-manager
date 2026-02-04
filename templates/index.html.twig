@@ -43,7 +43,7 @@
                 </p>
                 <form action="{{ path('oauth_discord') }}" method="post" style="margin-top: 1.5rem;">
                     <input type="hidden" name="token" value="{{ csrf_token('discord-auth') }}"/>
-                    <button class="btn-action btn-primary-gradient" type="submit" style="width: 100%;">
+                    <button class="btn-action btn-primary-gradient text-white" type="submit" style="width: 100%;">
                         <i class="bi bi-discord"></i> Connexion Discord
                     </button>
                 </form>

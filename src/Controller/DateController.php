@@ -28,6 +28,13 @@ final class DateController extends AbstractController
     public function index(DateRepository $dateRepository): Response
     {
         return $this->render('date/index.html.twig', [
+            'dates' => $dateRepository->findBy(["important"=>true]),
+        ]);
+    }
+    #[Route(name: 'app_date_index_all', methods: ['GET'])]
+    public function index_everything(DateRepository $dateRepository): Response
+    {
+        return $this->render('date/index.html.twig', [
             'dates' => $dateRepository->findAll(),
         ]);
     }

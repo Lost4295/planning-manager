@@ -36,6 +36,15 @@
 
             <div class="form-row">
                 <div class="form-group">
+                    {{ form_label(form.important, 'Est-ce un événement important ?') }}
+                    {{ form_widget(form.important) }}
+                    {{ form_errors(form.important) }}
+                    <small class="form-text">Une événement important doit se démarquer des autres, ce n'est pas seulement un élément du planning (comme un cours)</small>
+
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
                     {{ form_label(form.start_date, '📅 Date de début') }}
                     {{ form_widget(form.start_date) }}
                     {{ form_errors(form.start_date) }}

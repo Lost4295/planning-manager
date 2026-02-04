@@ -27,8 +27,13 @@ class Date
     #[ORM\Column(length: 6)]
     private ?string $color = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT,nullable: true)]
     private ?string $description = null;
+
+
+    #[ORM\Column]
+    private bool $important = false;
+
 
 
     #[ORM\Column]
@@ -114,6 +119,16 @@ class Date
         return $this;
     }
 
+    public function isImportant(): bool
+    {
+        return $this->important;
+    }
+
+    public function setImportant(bool $important): Date
+    {
+        $this->important = $important;
+        return $this;
+    }
     public function getDateScheduler(): ?DateScheduler
     {
         return $this->dateScheduler;
