@@ -60,7 +60,8 @@ final class DateController extends AbstractController
                 "end"=> $date->getEndDate()->format("Y-m-d H:i:s"),
                 "rendering"=> 'background',
                 "color"=> $color,
-                "backgroundColor"=> $color
+                "backgroundColor"=> $color,
+                "url"=> $this->generateUrl('app_date_show', ['id'=>$date->getId()]),
             ];
         }
         return new JsonResponse($array);
