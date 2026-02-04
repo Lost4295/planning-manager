@@ -26,7 +26,8 @@ class CreateDateType extends AbstractType
                 'attr' => ['class' => 'form-control']
             ])
             ->add('important', CheckboxType::class, [
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-check-input'],
+                'required' => false,
             ])
             ->add('start_date', DateTimeType::class, [
                 'attr' => ['class' => 'form-control']

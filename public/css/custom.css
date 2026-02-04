@@ -588,7 +588,7 @@ form select {
 }
 
 form .form-control:focus,
-form input:focus,
+form input:not([type="checkbox"]):focus,
 form textarea:focus,
 form select:focus {
     background: rgba(255, 255, 255, 0.12) !important;
