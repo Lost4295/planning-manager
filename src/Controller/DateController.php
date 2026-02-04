@@ -75,17 +75,8 @@ final class DateController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $dbUser = $entityManager->getRepository(User::class)->findOneBy(['email'=>$user->getUserIdentifier()]);
-            if ($dbUser && $dbUser->getId() == $this->myDiscordClientId) {
-                $date->setIsFromMe(true);
-                $date->setColor("4c9294");
-            } else {
-                $date->setIsFromMe(false);
-                $date->setColor("F0A8C6");
-            }
-            $entityManager->persist($date);
-            $entityManager->flush();
+            $this->checkColor($entityManager, $date);
+
 
             return $this->redirectToRoute('app_date_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -112,7 +103,7 @@ final class DateController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->checkColor($entityManager, $date);
 
             return $this->redirectToRoute('app_date_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -133,5 +124,25 @@ final class DateController extends AbstractController
         }
 
         return $this->redirectToRoute('app_date_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param Date $date
+     * @return void
+     */
+    public function checkColor(EntityManagerInterface $entityManager, Date $date): void
+    {
+        $user = $this->getUser();
+        $dbUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $user->getUserIdentifier()]);
+        if ($dbUser && $dbUser->getId() == $this->myDiscordClientId) {
+            $date->setIsFromMe(true);
+            $date->setColor("4c9294");
+        } else {
+            $date->setIsFromMe(false);
+            $date->setColor("F0A8C6");
+        }
+        $entityManager->persist($date);
+        $entityManager->flush();
     }
 }

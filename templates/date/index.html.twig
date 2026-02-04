@@ -5,6 +5,11 @@
 {% block body %}
     <div class="container-fluid">
         <h1>📅 {% if app.current_route == 'app_date_index' %}Événements importants {% else %} Tous les événements {% endif %}</h1>
+        {% if app.current_route == 'app_date_index' %}
+            <a class="btn btn-secondary" href="{{ path('app_date_index_all') }}"> Voir Tous les événements </a>
+        {% else %}
+            <a class="btn btn-secondary" href="{{ path('app_date_index') }}"> Voir les Événements importants</a>
+        {% endif %}
 
         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for date in dates %}
