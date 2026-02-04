@@ -13,10 +13,10 @@
             const accessToken = urlSearchParams.get('access_token');
 
             if (accessToken) {
-                window.location.href = `/discord/check?access_token=${accessToken}`;
+                window.location.href = `{{ path('oauth_discord_check') }}?access_token=${accessToken}`;
                 return;
             }
-            window.location.href = "/";
+            window.location.href = "{{ path('index') }}";
         });
     </script>
 {% endblock %}
