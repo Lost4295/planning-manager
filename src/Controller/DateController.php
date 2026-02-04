@@ -96,7 +96,7 @@ final class DateController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_date_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_date_show', methods: ['GET'], requirements: ["id"=>"\d+"])]
     public function show(Date $date): Response
     {
         return $this->render('date/show.html.twig', [
