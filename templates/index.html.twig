@@ -8,14 +8,14 @@
         <p>Organisez votre vie, un événement à la fois</p>
 
         <div class="action-buttons">
-            <a href="{{ path('app_date_index') }}" class="btn-action btn-primary-gradient">
+            <a href="{{ path('app_date_index') }}" class="btn-action btn-primary-gradient text-white">
                 <i class="bi bi-calendar-event"></i> Mes Événements
             </a>
-            <a href="{{ path('calendar') }}" class="btn-action btn-secondary-gradient">
+            <a href="{{ path('calendar') }}" class="btn-action btn-secondary-gradient text-white">
                 <i class="bi bi-calendar3"></i> Calendrier
             </a>
             {% if app.user %}
-                <a href="{{ path('app_date_new') }}" class="btn-action btn-accent-gradient">
+                <a href="{{ path('app_date_new') }}" class="btn-action btn-accent-gradient text-white">
                     <i class="bi bi-plus-circle"></i> Nouvel Événement
                 </a>
             {% endif %}

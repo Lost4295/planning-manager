@@ -12,8 +12,8 @@
                 <ul class="list-group list-group-flush">
                     {% for objectif in objectifs %}
                         <li class="list-group-item {% if app.user == objectif.creator %}list-group-item-primary {% else %} list-group-item-secondary{% endif %}">
-                            <p>{{ objectif.objectif }}</p>
-                            <p>{{ objectif.completionDate ? "Complété le : " ~ objectif.completionDate|date('Y-m-d H:i:s') : '' }}</p>
+                            <p class="text-dark">{{ objectif.objectif }}</p>
+                            <p class="text-dark">{{ objectif.completionDate ? "Complété le : " ~ objectif.completionDate|date('Y-m-d H:i:s') : 'Non complété' }}</p>
                             {% if app.user %}
                                 {% if not objectif.completed %}
                                     <a href="{{ path('objectif_complete', {'id': objectif.id}) }}"
