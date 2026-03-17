@@ -10,6 +10,13 @@
         {% else %}
             <a class="btn btn-secondary" href="{{ path('app_date_index') }}"> Voir les Événements importants</a>
         {% endif %}
+        {% if app.user and dates|length > 0 %}
+            <div class="text-center mt-4">
+                <a href="{{ path('app_date_new') }}" class="btn btn-success btn-lg">
+                    <i class="bi bi-plus-circle"></i> Créer un nouvel événement
+                </a>
+            </div>
+        {% endif %}
 
         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for date in dates %}
