@@ -75,7 +75,7 @@ final class ObjectivesController extends AbstractController
     }
 
 
-    #[Route('/complete/{id}', name: 'objectif_complete', methods: ['POST'])]
+    #[Route('/complete/{id}', name: 'objectif_complete', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
     public function complete(Request $request, Objectif $objectif, EntityManagerInterface $entityManager): Response
     {
@@ -87,7 +87,7 @@ final class ObjectivesController extends AbstractController
         return $this->redirectToRoute('objectives', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}', name: 'app_objectif_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_objectif_delete', methods: ['GET'])]
     #[IsGranted("ROLE_USER")]
     public function delete(Request $request, Objectif $objectif, EntityManagerInterface $entityManager): Response
     {
