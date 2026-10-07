@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Envois par e-mail{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h1>✉️ Envois par e-mail</h1>
+        <p>Récapitulatif quotidien tous les jours à 7h, hebdomadaire le lundi à 7h (envoyés uniquement s'il y a des événements).</p>
+        <a href="{{ path('app_mail_new') }}" class="btn btn-success mb-3">Ajouter un destinataire</a>
+
+        <table class="table">
+            <thead>
+                <tr><th>E-mail</th><th>Nom</th><th>Quotidien</th><th>Hebdomadaire</th><th></th></tr>
+            </thead>
+            <tbody>
+            {% for r in recipients %}
+                <tr>
+                    <td>{{ r.email }}</td>
+                    <td>{{ r.name }}</td>
+                    <td>{{ r.daily ? 'Oui' : 'Non' }}</td>
+                    <td>{{ r.weekly ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('app_mail_edit', {id: r.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <form method="post" action="{{ path('app_mail_delete', {id: r.id}) }}" style="display:inline"
+                              onsubmit="return confirm('Supprimer ce destinataire ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_mail_' ~ r.id) }}">
+                            <button class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">Aucun destinataire.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

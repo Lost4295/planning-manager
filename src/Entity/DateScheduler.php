@@ -18,8 +18,14 @@ class DateScheduler
     #[ORM\Column]
     private ?bool $repeatable = null;
 
-    #[ORM\Column(type:'integer', enumType: RepeatableEnum::class)]
+    #[ORM\Column(type: 'integer', nullable: true, enumType: RepeatableEnum::class)]
     private ?RepeatableEnum $repeat_every = null;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    private ?\DateTime $repeatUntil = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $occurrences = null;
 
 
     /**
@@ -60,6 +66,28 @@ class DateScheduler
         return $this;
     }
 
+
+    public function getRepeatUntil(): ?\DateTime
+    {
+        return $this->repeatUntil;
+    }
+
+    public function setRepeatUntil(?\DateTime $repeatUntil): static
+    {
+        $this->repeatUntil = $repeatUntil;
+        return $this;
+    }
+
+    public function getOccurrences(): ?int
+    {
+        return $this->occurrences;
+    }
+
+    public function setOccurrences(?int $occurrences): static
+    {
+        $this->occurrences = $occurrences;
+        return $this;
+    }
 
     /**
      * @return Collection<int, Date>

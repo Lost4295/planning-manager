@@ -50,4 +50,18 @@ class DateRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return Date[] Événements qui chevauchent l'intervalle [$start, $end[
+     */
+    public function findOverlapping(\DateTimeInterface $start, \DateTimeInterface $end): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.start_date < :end AND d.end_date > :start')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('d.start_date', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

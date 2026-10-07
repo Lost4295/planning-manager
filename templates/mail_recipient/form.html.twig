@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <div class="form-container">
+        <a href="{{ path('app_mail_index') }}" class="back-link"><i class="bi bi-arrow-left"></i> Retour</a>
+        <div class="form-card">
+            <h1>{{ title }}</h1>
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-primary">Enregistrer</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

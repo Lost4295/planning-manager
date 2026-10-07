@@ -2,18 +2,39 @@
 
 namespace App\Enum;
 
-enum RepeatableEnum
+enum RepeatableEnum: int
 {
-    case Daily;
+    case Daily = 1;
+    case Weekly = 2;
+    case Monthly = 3;
+    case Yearly = 4;
 
-    case Weekly;
-
-    case Monthly;
-
-    case Yearly;
-
-    public function r()
+    public function label(): string
     {
-        // TODO: Implement r() method.
+        return match ($this) {
+            self::Daily => 'Quotidien',
+            self::Weekly => 'Hebdomadaire',
+            self::Monthly => 'Mensuel',
+            self::Yearly => 'Annuel',
+        };
+    }
+
+    public function shift(\DateTimeInterface $base, int $index): \DateTimeImmutable
+    {
+        $base = \DateTimeImmutable::createFromInterface($base);
+        $unit = match ($this) {
+            self::Daily => 'day',
+            self::Weekly => 'week',
+            self::Monthly => 'month',
+            self::Yearly => 'year',
+        };
+        $result = $base->modify(sprintf('+%d %s', $index, $unit));
+
+        // Évite le débordement (ex : 31 janvier + 1 mois => 3 mars) en se calant sur la fin du mois
+        if (in_array($this, [self::Monthly, self::Yearly], true) && $result->format('j') !== $base->format('j')) {
+            $result = $result->modify('last day of previous month');
+        }
+
+        return $result;
     }
 }

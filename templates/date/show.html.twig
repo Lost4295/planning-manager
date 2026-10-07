@@ -91,6 +91,12 @@
                         >
                             <i class="bi bi-trash"></i> Supprimer cet événement
                         </a>
+                        {% if date.dateScheduler %}
+                            <a href="{{ path('app_date_delete', {'id': date.id, 'series': 1}) }}" class="btn btn-danger w-100" style="margin-top: 1rem;"
+                               onclick="return confirm('Supprimer toute la série ?');">
+                                <i class="bi bi-trash"></i> Supprimer toute la série ({{ date.dateScheduler.dateSelected|length }} occurrences)
+                            </a>
+                        {% endif %}
                     </div>
                 {% endif %}
                 <a href="{{ path('calendar') }}" class="btn btn-primary">

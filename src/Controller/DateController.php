@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Date;
 use App\Entity\User;
+use App\Entity\DateScheduler;
+use App\Enum\RepeatableEnum;
 use App\Form\CreateDateType;
 use App\Form\UpdateDateType;
 use App\Repository\DateRepository;
+use App\Service\RecurringDateGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -72,7 +75,7 @@ final class DateController extends AbstractController
 
     #[Route('/new', name: 'app_date_new', methods: ['GET', 'POST'])]
     #[IsGranted("ROLE_USER")]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, RecurringDateGenerator $generator): Response
     {
         $date = new Date();
         $form = $this->createForm(CreateDateType::class, $date);
@@ -81,6 +84,20 @@ final class DateController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->checkColor($entityManager, $date);
 
+            $every = $form->get('repeat_every')->getData();
+            if ($every instanceof RepeatableEnum) {
+                $scheduler = (new DateScheduler())
+                    ->setRepeatable(true)
+                    ->setRepeatEvery($every)
+                    ->setRepeatUntil($form->get('repeat_until')->getData())
+                    ->setOccurrences($form->get('repeat_count')->getData());
+                $scheduler->addDateSelected($date);
+                foreach ($generator->generate($date, $scheduler) as $occurrence) {
+                    $entityManager->persist($occurrence);
+                }
+                $entityManager->persist($scheduler);
+                $entityManager->flush();
+            }
 
             return $this->redirectToRoute('app_date_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -122,7 +139,15 @@ final class DateController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function delete(Request $request, Date $date, EntityManagerInterface $entityManager): Response
     {
-        $entityManager->remove($date);
+        $scheduler = $date->getDateScheduler();
+        if ($scheduler && $request->query->getBoolean('series')) {
+            foreach ($scheduler->getDateSelected()->toArray() as $occurrence) {
+                $entityManager->remove($occurrence);
+            }
+            $entityManager->remove($scheduler);
+        } else {
+            $entityManager->remove($date);
+        }
         $entityManager->flush();
 
         return $this->redirectToRoute('app_date_index', [], Response::HTTP_SEE_OTHER);

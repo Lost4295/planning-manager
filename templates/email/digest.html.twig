@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<body style="font-family: Arial, sans-serif; color: #222; max-width: 640px; margin: auto;">
+    <h2>{{ subject }}</h2>
+    <p>Bonjour{% if recipient.name %} {{ recipient.name }}{% endif %},</p>
+    {% for day in days %}
+        {% if weekly %}<h3 style="border-bottom: 1px solid #ddd; padding-bottom: 4px;">{{ day.label }}</h3>{% endif %}
+        <ul style="padding-left: 18px;">
+            {% for e in day.events %}
+                <li style="margin-bottom: 10px;">
+                    <strong style="color: #{{ e.color }};">{{ e.title }} (de {{ e.color =="4c9294"?"Ylan":"Tayana" }})</strong>{% if e.important %} ⭐{% endif %}<br>
+                    {% if e.sameDay %}
+                        {{ e.start|date('H:i') }} – {{ e.end|date('H:i') }}
+                    {% else %}
+                        {{ e.start|date('d/m H:i') }} → {{ e.end|date('d/m H:i') }}
+                    {% endif %}
+                    (durée : {{ e.duration }})
+                    {% if e.description %}<br><span style="color: #666;">{{ e.description|length > 120 ? e.description|slice(0, 120) ~ '…' : e.description }}</span>{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</body>
+</html>
